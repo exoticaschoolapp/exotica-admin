@@ -9,6 +9,7 @@ import MarksExams from './pages/MarksExams';
 import NoticeBoard from './pages/NoticeBoard';
 import StaffPayroll from './pages/StaffPayroll';
 import Homework from './pages/Homework';
+import StudentList from './pages/StudentList';
 function App() {
   return (
     <Router>
@@ -30,7 +31,8 @@ function App() {
             <Route path="/notice" element={<NoticeBoard />} />
             <Route path="/staff" element={<StaffPayroll />} />
             <Route path="/homework" element={<Homework />} />
-          </Routes>
+            <Route path="/student-list" element={<StudentList />} />
+             </Routes>
         </div>
         
       </div>

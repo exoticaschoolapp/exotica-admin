@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { UploadCloud, FileSpreadsheet, UserPlus, Save, CheckCircle2 } from 'lucide-react';
+import { UploadCloud, FileSpreadsheet, UserPlus, Save, CheckCircle2, Loader2 } from 'lucide-react';
+import { db } from '../firebase/firebaseConfig';
+import { collection, addDoc } from 'firebase/firestore';
 
 export default function BulkUpload() {
   const [activeTab, setActiveTab] = useState('bulk'); // 'bulk' અથવા 'direct'
+  const [loading, setLoading] = useState(false);
   
   // Bulk Upload માટેના સ્ટેટ
   const [file, setFile] = useState(null);
@@ -21,15 +24,37 @@ export default function BulkUpload() {
     setFile(null);
   };
 
-  const handleDirectSubmit = (e) => {
+  // ફાયરબેઝમાં ડેટા સેવ કરવાની ફંક્શન
+  const handleDirectSubmit = async (e) => {
     e.preventDefault();
-    alert(`Student ${formData.name} registered successfully in Std ${formData.std}-${formData.div}!`);
-    setFormData({ name: '', rollNo: '', dob: '', parentName: '', phone: '', std: '10', div: 'A' });
+    setLoading(true);
+
+    try {
+      // Firestore ના 'students' કલેક્શનમાં ડેટા સેવ કરો
+      await addDoc(collection(db, 'students'), {
+        name: formData.name,
+        rollNo: Number(formData.rollNo),
+        dob: formData.dob,
+        parentName: formData.parentName,
+        phone: formData.phone,
+        standard: formData.std,
+        division: formData.div,
+        createdAt: new Date()
+      });
+
+      alert(`Student ${formData.name} registered and saved to Firebase successfully!`);
+      setFormData({ name: '', rollNo: '', dob: '', parentName: '', phone: '', std: '10', div: 'A' });
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      alert('Failed to save student data. Please check connection.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="p-6 h-full flex flex-col">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6 drop-shadow-sm">Student Registration</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-6 drop-shadow-sm">Student Registration (Live Firebase)</h1>
 
       {/* Tabs (બલ્ક અપલોડ અને ડાયરેક્ટ એન્ટ્રી માટેના બટન) */}
       <div className="flex gap-4 mb-6">
@@ -43,7 +68,7 @@ export default function BulkUpload() {
           onClick={() => setActiveTab('direct')}
           className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-md ${activeTab === 'direct' ? 'bg-blue-600 text-white' : 'bg-white/60 text-gray-600 hover:bg-white'}`}
         >
-          <UserPlus className="w-5 h-5" /> Direct Single Entry
+          <UserPlus className="w-5 h-5" /> Direct Single Entry (Live)
         </button>
       </div>
 
@@ -94,7 +119,7 @@ export default function BulkUpload() {
           </form>
         )}
 
-        {/* ================= TAB 2: Direct Entry Form ================= */}
+        {/* ================= TAB 2: Direct Entry Form (Firebase Connected) ================= */}
         {activeTab === 'direct' && (
           <form onSubmit={handleDirectSubmit} className="flex flex-col gap-6 animate-fade-in">
             <div className="grid grid-cols-2 gap-6">
@@ -164,8 +189,13 @@ export default function BulkUpload() {
               </div>
             </div>
 
-            <button type="submit" className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg flex justify-center items-center gap-2 mt-4 transition-all transform hover:scale-[1.02]">
-              <Save className="w-5 h-5" /> Save Student Entry
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg flex justify-center items-center gap-2 mt-4 transition-all transform hover:scale-[1.02] disabled:opacity-50"
+            >
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />} 
+              {loading ? 'Saving to Firebase...' : 'Save Student Entry to Cloud'}
             </button>
           </form>
         )}
