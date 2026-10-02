@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import BulkUpload from './pages/BulkUpload';
 import StudentList from './pages/StudentList';
+import FeesManagement from './pages/FeesManagement';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/bulk-upload" element={<BulkUpload />} />
             <Route path="/student-list" element={<StudentList />} />
+            <Route path="/fees" element={<FeesManagement />} />
           </Routes>
         </main>
       </div>
