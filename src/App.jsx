@@ -5,6 +5,11 @@ import Dashboard from './pages/Dashboard';
 import BulkUpload from './pages/BulkUpload';
 import StudentList from './pages/StudentList';
 import FeesManagement from './pages/FeesManagement';
+import Attendance from './pages/Attendance';
+import MarksExams from './pages/MarksExams';
+import Homework from './pages/Homework';
+import NoticeBoard from './pages/NoticeBoard';
+import StaffPayroll from './pages/StaffPayroll';
 
 export default function App() {
   return (
@@ -17,6 +22,11 @@ export default function App() {
             <Route path="/bulk-upload" element={<BulkUpload />} />
             <Route path="/student-list" element={<StudentList />} />
             <Route path="/fees" element={<FeesManagement />} />
+            <Route path="/attendance" element={<Attendance />} />
+            <Route path="/marks" element={<MarksExams />} />
+            <Route path="/homework" element={<Homework />} />
+            <Route path="/notice-board" element={<NoticeBoard />} />
+            <Route path="/staff-payroll" element={<StaffPayroll />} />
           </Routes>
         </main>
       </div>
