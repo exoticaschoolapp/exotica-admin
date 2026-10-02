@@ -16,7 +16,7 @@ export default function App() {
     <Router>
       <div className="flex h-screen bg-gray-100 overflow-hidden">
         <Sidebar />
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 h-screen overflow-y-auto p-8">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/bulk-upload" element={<BulkUpload />} />
